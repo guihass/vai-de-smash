@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Anton", "Inter", system-ui, sans-serif;
+  --font-script: "Caveat", "Segoe Script", cursive;
+
+  --color-bg: #121212;
+  --color-surface: #18181b;
+  --color-surface-2: #202024;
+  --color-border: #2c2c31;
+
+  --color-cream: #f4efe6;
+
+  --color-brand-red: #ef4444;
+  --color-brand-red-dark: #b91c1c;
+  --color-brand-amber: #f59e0b;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: #e4e4e7;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer base {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Área segura de aparelhos com notch / barra de gestos */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@utility mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Esconde a barra de rolagem mantendo o scroll (abas do cardápio) */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
