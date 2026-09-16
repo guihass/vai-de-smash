@@ -23,6 +23,13 @@ function conditionalHtml(env) {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
+  // Garante um valor para %VITE_SITE_URL% no index.html mesmo sem .env
+  // (vazio geraria href="/" e quebraria o build).
+  if (!env.VITE_SITE_URL) {
+    env.VITE_SITE_URL = 'https://vai-de-smash.vercel.app'
+    process.env.VITE_SITE_URL = env.VITE_SITE_URL
+  }
+
   return {
     // "/" para domínio próprio; "/nome-do-repo/" para GitHub Pages
     base: env.VITE_BASE_PATH || '/',
