@@ -1,5 +1,6 @@
-import { Flame, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import InstagramIcon from "./icons/InstagramIcon";
+import Logo from "./Logo";
 import { business, navLinks, whatsappUrl } from "../data/business";
 
 export default function Footer() {
@@ -9,12 +10,7 @@ export default function Footer() {
     <footer className="border-t border-border bg-bg pb-28 pt-10 sm:py-12 md:pb-12">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-2 sm:px-6 md:flex md:items-start md:justify-between">
         <div>
-          <a href="#inicio" className="flex items-center gap-2 text-lg font-extrabold text-white">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-red">
-              <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
-            </span>
-            Vai de <span className="text-brand-amber">Smash</span>
-          </a>
+          <Logo />
           <p className="mt-3 max-w-xs text-sm text-zinc-500">
             {business.tagline} em {business.city}.
           </p>

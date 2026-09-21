@@ -1,6 +1,6 @@
-# Vai de Smash
+# Brasa Burger
 
-Site institucional/landing page da hamburgueria artesanal **Vai de Smash**, em Louveira - SP.
+Site institucional/landing page da hamburgueria artesanal **Brasa Burger**, em Louveira - SP.
 
 ## Stack
 

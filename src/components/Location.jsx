@@ -87,7 +87,7 @@ export default function Location() {
 
           <Reveal y={16} delay={0.15} className="overflow-hidden rounded-2xl border border-border">
             <iframe
-              title="Localização Vai de Smash"
+              title="Localização Brasa Burger"
               src={`https://www.google.com/maps?q=${mapsQuery}&output=embed`}
               className="h-full min-h-[260px] w-full sm:min-h-[380px]"
               style={{ border: 0 }}

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 import { navLinks } from "../data/business";
+import Logo from "./Logo";
 import { useCart } from "../context/CartContext";
 
 export default function Header() {
@@ -26,12 +27,7 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex h-[60px] max-w-6xl items-center justify-between px-4 sm:px-6">
-        <a href="#inicio" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-red">
-            <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
-          </span>
-          Vai de <span className="text-brand-amber">Smash</span>
-        </a>
+        <Logo />
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
