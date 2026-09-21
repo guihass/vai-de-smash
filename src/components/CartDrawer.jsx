@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { formatBRL } from "../lib/format";
+import { asset } from "../lib/asset";
 
 export default function CartDrawer() {
   const { items, count, total, hasEstimate, isOpen, closeCart, setQty, removeItem, clear, checkoutUrl } =
@@ -80,7 +81,7 @@ export default function CartDrawer() {
                   {items.map((item) => (
                     <li key={item.name} className="flex gap-3 py-4">
                       <img
-                        src={item.image}
+                        src={asset(item.image)}
                         alt=""
                         className="h-[4.5rem] w-[4.5rem] shrink-0 rounded-lg object-cover"
                       />

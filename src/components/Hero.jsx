@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowDownRight, Beef, Sandwich, Star, UtensilsCrossed, Zap } from "lucide-react";
 import { business } from "../data/business";
+import { asset } from "../lib/asset";
 import Scribble from "./decor/Scribble";
 
 const container = {
@@ -96,7 +97,7 @@ export default function Hero() {
               aria-hidden="true"
             />
             <img
-              src="/images/hero-smash.jpg"
+              src={asset("/images/hero-smash.jpg")}
               alt="Smash Burger duplo com bacon, cheddar e molho barbecue"
               className="relative h-full w-full object-cover"
               style={{
