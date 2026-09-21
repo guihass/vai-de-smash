@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { business, whatsappUrl } from "../data/business";
 import { formatBRL } from "../lib/format";
 
-const STORAGE_KEY = "vaidesmash:carrinho";
+const STORAGE_KEY = "brasaburger:carrinho";
 
 const CartContext = createContext(null);
 
