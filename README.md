@@ -74,13 +74,42 @@ O site é 100% estático (sem backend), então qualquer host de arquivos estáti
 
 ### Vercel (recomendado)
 
-1. Suba o repositório para o GitHub.
-2. Em [vercel.com/new](https://vercel.com/new), importe o repositório — o `vercel.json` já
-   configura build, pasta de saída, cache e headers.
-3. Em *Settings → Environment Variables*, adicione as variáveis do `.env.example` que quiser.
-4. Cada push na `main` gera um deploy automático.
+Três caminhos, do mais simples ao mais automatizado.
 
-Ou pela CLI: `npx vercel --prod`.
+**a) Importando pelo painel** — sem terminal:
+
+1. Em [vercel.com/new](https://vercel.com/new), importe o repositório — o `vercel.json` já
+   configura build, pasta de saída, cache e headers.
+2. Em *Settings → Environment Variables*, adicione as variáveis do `.env.example` que quiser.
+3. Cada push na `main` gera um deploy automático, e cada pull request ganha uma URL de preview.
+
+**b) Pela CLI, na sua máquina:**
+
+```bash
+npx vercel          # preview, com URL própria
+npx vercel --prod   # produção
+```
+
+**c) Pelo GitHub Actions** — útil quando o deploy precisa sair de um ambiente que não
+consegue falar com a Vercel, ou quando você não quer conectar a integração Git.
+
+O workflow `.github/workflows/deploy-vercel.yml` já está pronto. Falta cadastrar três
+segredos em *Settings → Secrets and variables → Actions → New repository secret*:
+
+| Segredo | Onde encontrar |
+| --- | --- |
+| `VERCEL_TOKEN` | [vercel.com/account/tokens](https://vercel.com/account/tokens) → *Create Token* |
+| `VERCEL_ORG_ID` | Vercel → projeto → *Settings → General* → **Team ID** (ou **Your ID** em conta pessoal) |
+| `VERCEL_PROJECT_ID` | Vercel → projeto → *Settings → General* → **Project ID** |
+
+Os dois IDs também saem de um `npx vercel link` local: ele grava os valores em
+`.vercel/project.json`.
+
+Depois disso: push na `main` publica em produção, e cada pull request recebe um comentário
+com a URL do preview. A URL também aparece no resumo da execução, em *Actions*.
+
+Enquanto os segredos não existirem o workflow passa sem fazer nada — ele avisa o que falta
+em vez de quebrar o CI.
 
 ### Netlify
 

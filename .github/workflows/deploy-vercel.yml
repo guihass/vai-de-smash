@@ -1,0 +1,106 @@
+name: Deploy na Vercel
+
+# Publica na Vercel a partir do GitHub, sem precisar da CLI na máquina local.
+# Push na main -> produção. Pull request -> deploy de preview com URL própria.
+#
+# Precisa de três segredos em Settings > Secrets and variables > Actions:
+#   VERCEL_TOKEN       vercel.com/account/tokens
+#   VERCEL_ORG_ID      Vercel > projeto > Settings > General ("Team ID" ou "Your ID")
+#   VERCEL_PROJECT_ID  Vercel > projeto > Settings > General ("Project ID")
+# Enquanto eles não existirem o job passa sem fazer nada, em vez de falhar.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Confere se os segredos da Vercel existem
+        id: guard
+        run: |
+          faltando=""
+          [ -n "$VERCEL_TOKEN" ] || faltando="$faltando VERCEL_TOKEN"
+          [ -n "$VERCEL_ORG_ID" ] || faltando="$faltando VERCEL_ORG_ID"
+          [ -n "$VERCEL_PROJECT_ID" ] || faltando="$faltando VERCEL_PROJECT_ID"
+          if [ -n "$faltando" ]; then
+            echo "pronto=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Deploy ignorado::Faltam os segredos:$faltando — veja a seção Vercel no README."
+          else
+            echo "pronto=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.pronto == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.pronto == 'true'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instala a CLI da Vercel
+        if: steps.guard.outputs.pronto == 'true'
+        run: npm install --global vercel@latest
+
+      # main -> production; qualquer outra ref (PR, branch) -> preview
+      - name: Escolhe o ambiente
+        id: alvo
+        if: steps.guard.outputs.pronto == 'true'
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "ambiente=production" >> "$GITHUB_OUTPUT"
+            echo "flag=--prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "ambiente=preview" >> "$GITHUB_OUTPUT"
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Baixa a configuração do projeto
+        if: steps.guard.outputs.pronto == 'true'
+        run: vercel pull --yes --environment=${{ steps.alvo.outputs.ambiente }} --token="$VERCEL_TOKEN"
+
+      - name: Build
+        if: steps.guard.outputs.pronto == 'true'
+        run: vercel build ${{ steps.alvo.outputs.flag }} --token="$VERCEL_TOKEN"
+
+      - name: Publica
+        id: deploy
+        if: steps.guard.outputs.pronto == 'true'
+        run: |
+          url=$(vercel deploy --prebuilt ${{ steps.alvo.outputs.flag }} --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Deploy na Vercel"
+            echo ""
+            echo "Ambiente: \`${{ steps.alvo.outputs.ambiente }}\`"
+            echo ""
+            echo "$url"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comenta a URL no pull request
+        if: steps.guard.outputs.pronto == 'true' && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Preview publicado na Vercel: ${{ steps.deploy.outputs.url }}`,
+            });
