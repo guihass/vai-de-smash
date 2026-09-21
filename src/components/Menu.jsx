@@ -6,6 +6,7 @@ import { whatsappUrl } from "../data/business";
 import { useCart } from "../context/CartContext";
 import { formatBRL } from "../lib/format";
 import Reveal from "./Reveal";
+import { asset } from "../lib/asset";
 
 const gridVariants = {
   hidden: {},
@@ -141,7 +142,7 @@ export default function Menu() {
                 {/* Imagem: quadrada à esquerda no celular, 4:3 no topo em telas maiores */}
                 <div className="relative w-[7.25rem] shrink-0 self-stretch overflow-hidden bg-surface-2 sm:aspect-[4/3] sm:w-auto sm:self-auto">
                   <img
-                    src={item.image}
+                    src={asset(item.image)}
                     alt={item.name}
                     loading="lazy"
                     decoding="async"

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import { menuCategories } from "../data/menu";
+import { asset } from "../lib/asset";
 import { useCart } from "../context/CartContext";
 
 // Item do cardápio exibido como destaque — o botão adiciona direto ao pedido
@@ -37,7 +38,7 @@ export default function Signature() {
       >
         <motion.div variants={fade} className="relative mx-auto w-full max-w-md px-2 sm:px-0 lg:max-w-none">
           <img
-            src="/images/signature-combo.jpg"
+            src={asset("/images/signature-combo.jpg")}
             alt="Combo Casal 2.0 com dois smash burgers, duas porções de fritas e dois refrigerantes"
             className="aspect-[4/3] w-full rounded-lg object-cover shadow-2xl shadow-black/50 sm:aspect-auto sm:rounded-sm"
             loading="lazy"
